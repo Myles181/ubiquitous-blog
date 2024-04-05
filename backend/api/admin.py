@@ -3,7 +3,7 @@ from .models import *
 
 class UserAdmin(admin.ModelAdmin):
     model = User
-    list_display = ['username', 'email']
+    list_display = ['id', 'username', 'email']
 
 class ProfileAdmin(admin.ModelAdmin):
     model = Profile
@@ -16,17 +16,29 @@ class ProfileAdmin(admin.ModelAdmin):
 
 class PostAdmin(admin.ModelAdmin):
     model = Post
-    list_display = ['auth_username', 'title', 'description']
+    list_display = ['id', 'auth_username', 'title']
 
     def auth_username(self, obj):
-        return obj.user.username
+        return obj.author.username
     auth_username.short_description = 'Username'
 
 
-# class CommentAdmin(admin.ModelAdmin):
-#     model = Comment
-#     list_display = ['']
+class CommentAdmin(admin.ModelAdmin):
+    model = PostComment
+    list_display = ['id', 'body', 'auth_username', 'post']
+
+    def auth_username(self, obj):
+        return obj.author.username
+    auth_username.short_description = 'Username'
+
+    def post(self, obj):
+        return obj.post.title
+    post.short_description = 'Post'
+
+
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Profile, ProfileAdmin)
 admin.site.register(Post, PostAdmin)
+admin.site.register(PostComment, CommentAdmin)
+
